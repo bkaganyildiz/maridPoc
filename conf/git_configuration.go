@@ -7,13 +7,8 @@ import (
 	"io/ioutil"
 	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 	"os"
+	"maridPoc/util"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func getDirectoryName(url string) (name string) {
 	urlWithoutExtension := strings.TrimRight(url, ".git")
@@ -23,7 +18,7 @@ func getDirectoryName(url string) (name string) {
 	}
 	return urlWithoutExtension[lastIndex+1:]
 }
-func ReadConfigurationFromGit(url string, username string, password string)  {
+func ReadConfigurationFromGit(url string, username string, password string) (map[string]string) {
 	os.Chdir("/tmp")
 	directoryName := getDirectoryName(url)
 	_, err := git.PlainClone(directoryName, false, &git.CloneOptions{
@@ -34,14 +29,15 @@ func ReadConfigurationFromGit(url string, username string, password string)  {
 			password,
 		},
 	})
-	check(err)
+	util.Check(err)
 	os.Chdir(directoryName)
 	files, err := ioutil.ReadDir(".")
-	check(err)
+	util.Check(err)
 	for _, f := range files {
 		fmt.Println(f.Name())
 	}
-	readConfigurations("/tmp/"+directoryName+"/.marid.conf")
-	print("/tmp/"+directoryName)
+	conf := readConfigurations("/tmp/"+directoryName+"/.marid.conf")
+	print("/tmp/"+directoryName+"\n")
 	os.RemoveAll("/tmp/"+directoryName)
+	return conf
 }

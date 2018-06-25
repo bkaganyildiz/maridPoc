@@ -6,7 +6,7 @@ import (
 )
 
 func readConfigurations(path string) (conf map[string]string) {
-	print(path)
+	print(path+"\n")
 	configuration := make(map[string]string)
 	dat, _ := ioutil.ReadFile(path)
 	confs := strings.Split(string(dat), "\n")

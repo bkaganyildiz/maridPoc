@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"bytes"
 	"encoding/json"
+	"maridPoc/util"
 )
 const (
 	createQueue = "http://localhost:5000/queue-generator"
@@ -47,14 +48,14 @@ func createQueueAndGetItsName(apiKey string) (queName string) {
 		payload, _ := ioutil.ReadAll(resp.Body)
 		m := make(map[string]string)
 		err := json.Unmarshal(payload, &m)
-		check(err)
+		util.Check(err)
 		return m["queue_name"]
 	} else {
 		defer resp.Body.Close()
 		payload, _ := ioutil.ReadAll(resp.Body)
 		m := make(map[string]string)
 		err := json.Unmarshal(payload, &m)
-		check(err)
+		util.Check(err)
 		panic(m["_error"])
 	}
 	return ""
